@@ -7,7 +7,10 @@ class CPU:
 
     def __init__(self):
         """Construct a new CPU."""
-        pass
+        self.registers = [0] * 8
+        self.memory = [0] * 256
+        self.pc = 0
+        self.sp = self.registers[7]
 
     def load(self):
         """Load a program into memory."""
@@ -24,10 +27,11 @@ class CPU:
             0b01000111, # PRN R0
             0b00000000,
             0b00000001, # HLT
+            
         ]
 
         for instruction in program:
-            self.ram[address] = instruction
+            self.memory[address] = instruction
             address += 1
 
 
@@ -62,4 +66,36 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        pass
+
+        #need to use ram_read()/write?
+
+        #0b00000001, aka "HLT" is basically 1
+        while self.memory[self.pc] is not == 1:
+            ir = self.memory[self.pc]
+
+            if ir == 2:
+                reg_num = self.memory[self.pc + 1]
+		        value = self.memory[self.pc + 2]
+		        self.registers[reg_num] = value
+		        self.pc += 3
+
+            if ir == 9:
+                reg_num = self.memory[self.pc + 1]
+		        print(self.registers[reg_num])
+		        self.pc += 2
+
+            else:
+                print("invalid entry")
+
+            
+
+    def ram_read(self, MAR):
+    """should accept the address to read & return the value stored there"""
+        # memory address register
+        return self.registers[MAR]
+
+    def ram_write(self, MAR, MDR):
+    """should accept a value to write, and the address to write it to"""
+        # memory data register 
+        # whatever was at MAR now has MDR as its value
+        self.registers[MAR] = MDR

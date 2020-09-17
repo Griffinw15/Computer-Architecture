@@ -2,6 +2,10 @@
 
 import sys
 
+HLT = 0b00000001 
+LDI = 0b10000010 #00000rrr iiiiiiii
+PRN = 0b01000111 #00000rrr
+
 class CPU:
     """Main CPU class."""
 
@@ -73,13 +77,15 @@ class CPU:
         while self.memory[self.pc] is not == 1:
             ir = self.memory[self.pc]
 
-            if ir == 2:
+            #LDI = 0b10000010 = 82
+            if ir == 82:
                 reg_num = self.memory[self.pc + 1]
 		        value = self.memory[self.pc + 2]
 		        self.registers[reg_num] = value
 		        self.pc += 3
 
-            if ir == 9:
+            #PRN = 0b01000111 = 47
+            if ir == 47:
                 reg_num = self.memory[self.pc + 1]
 		        print(self.registers[reg_num])
 		        self.pc += 2
